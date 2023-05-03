@@ -1,0 +1,126 @@
+#include<iostream>
+using namespace std;
+
+class Personaje {
+    private:
+        string nombre;
+        int edad;
+        string tipo;
+        float altura;
+    public:
+        Personaje() { } // constructor predeterminado
+        Personaje(string n, int e,string t,float a) {
+            nombre = n;
+            edad = e;
+            tipo=t;
+            altura=a;
+        } // constructor con parámetros
+        string getNombre() {
+            return nombre;
+        }
+        int getEdad() {
+            return edad;
+        }
+        string getTipo() {
+            return tipo;
+        }
+        float getAltura() {
+            return altura;
+        }
+        void setNombre(string n) {
+            nombre = n;
+        }
+        void setEdad(int e) {
+            edad = e;
+        }
+        void setTipo(int t) {
+            tipo = t;
+        }
+        void setAltura(int a) {
+            altura = a;
+        }
+};
+
+class DynamicPersonajeArray {
+    private:
+        Personaje *data;
+        int size;
+    public:
+        DynamicPersonajeArray() { 
+            size = 0;
+            data = new Personaje[size];
+        }
+        DynamicPersonajeArray(int s) { 
+            size = s;
+            data = new Personaje[size];
+        }
+        DynamicPersonajeArray(const DynamicPersonajeArray &o) {
+            size = o.size;
+            data = new Personaje[size];
+            for(int i=0; i<size; i++)
+                data[i] = o.data[i];
+        }
+        ~DynamicPersonajeArray() {
+            delete[] data;
+        }
+        void push_back(Personaje val) {
+            Personaje *aux = new Personaje[size+1];
+            for(int i=0; i<size; i++) {
+                aux[i] = data[i];
+            }
+            aux [size] = val;
+            delete[] data;
+            data = aux ;
+            size++;
+        }
+        void insert(int pos, Personaje val) {
+            Personaje *aux  = new Personaje[size+1];
+            for(int i=0; i<size; i++) {
+                if(i >= pos) {
+                    aux [i+1] = data[i];
+                } else {
+                    aux [i] = data[i];
+                }
+            }
+            aux [pos] = val;
+            delete[] data;
+            data = aux ;
+            size++;
+        }
+        void remove(int pos) {
+            Personaje *aux  = new Personaje[size-1];
+            for(int i=0; i<size-1; i++) {
+                if(i >= pos) {
+                    aux [i] = data[i+1];
+                } else {
+                    aux [i] = data[i];
+                }
+            }
+            delete[] data;
+            data = aux ;
+            size--;
+        }
+        void print() {
+            for(int i=0; i<size; i++) {
+                cout << "Nombre: " << data[i].getNombre() << ", Edad: " << data[i].getEdad() << ",Tipo: " << data[i].getTipo()<< ", Altura: " << data[i].getAltura()<< endl;
+            }
+        }
+};
+
+int main() {
+    DynamicPersonajeArray animals;
+    
+    Personaje p1("Triceratops", 30,"dinosaurio",2.5);
+    Personaje p2("kiwi", 10, "ave",0.25);
+    Personaje p3("Rinoceronte", 35,"mamifero",3.6);
+    
+    animals.push_back(p1);
+    animals.push_back(p2);
+    animals.print();
+    animals.insert(1, p3);
+    animals.print();
+    animals.remove(0);
+    animals.print();
+    
+    return 0;
+}
